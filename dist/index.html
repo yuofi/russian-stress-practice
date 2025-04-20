@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Russian Stress Practice</title>
+      <script type="module" crossorigin src="/russian-stress-practice/assets/index.C3KEN5Ml.js"></script>
+      <link rel="stylesheet" crossorigin href="/russian-stress-practice/assets/index.BEDM2vLD.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Russian Word Stress Practice</h1>
+
+            <div id="word-display" class="word-display">
+                <!-- Word will be loaded here by JavaScript -->
+                Loading word...
+            </div>
+
+            <div id="feedback" class="feedback">
+                <!-- Feedback will appear here -->
+            </div>
+
+            <div class="controls">
+                <button id="next-button">Next Word</button>
+            </div>
+
+            <div class="stats">
+                <p>
+                    Score: <span id="score">0</span> /
+                    <span id="attempts">0</span>
+                </p>
+            </div>
+        </div>
+        <!-- IMPORTANT: type="module" -->
+        <script>
+            // Debug script to check if main script fails to load
+            window.addEventListener("load", function () {
+                setTimeout(function () {
+                    if (!window.appLoaded) {
+                        console.error(
+                            "Main application script did not initialize properly",
+                        );
+                        document.body.innerHTML +=
+                            '<div style="color:red;padding:20px;background:#ffeeee;margin:20px;border:1px solid red">App failed to load. Check console for errors.</div>';
+                    }
+                }, 1000);
+            });
+        </script>
+    </body>
+</html>
