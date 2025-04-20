@@ -1,0 +1,9 @@
+/* Copy your CSS here if it's not already in the public folder */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Add the rest of your CSS */
