@@ -1,12 +1,13 @@
-# Russian Phonetics Practice
+{{REWRITTEN_CODE}}
+# Russian Stress Practice
 
 A web application to help learners practice Russian word stress. Correctly placing stress in Russian words is crucial for proper pronunciation and understanding.
 
-![Russian Phonetics Practice](https://github.com/DenisSud/Russian-phonetics/assets/YOUR_ASSET_ID/screenshot.png)
+![Russian Stress Practice](https://github.com/DenisSud/russian-stress-practice-/assets/YOUR_ASSET_ID/screenshot.png)
 
 ## Live Demo
 
-Visit the application at: [https://denissud.github.io/Russian-phonetics/](https://denissud.github.io/Russian-phonetics/)
+Visit the application at: [https://denissud.github.io/russian-stress-practice-/](https://denissud.github.io/russian-stress-practice-/)
 
 ## Features
 
@@ -35,8 +36,8 @@ Visit the application at: [https://denissud.github.io/Russian-phonetics/](https:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/DenisSud/Russian-phonetics.git
-   cd Russian-phonetics
+   git clone https://github.com/DenisSud/russian-stress-practice-.git
+   cd russian-stress-practice-
    ```
 
 2. Install dependencies:
@@ -67,7 +68,7 @@ When you push changes to the `main` branch, the GitHub Actions workflow will:
 1. Build the application
 2. Deploy it to GitHub Pages
 
-The application will be available at: `https://denissud.github.io/Russian-phonetics/`
+The application will be available at: `https://denissud.github.io/russian-stress-practice-/`
 
 ## Technologies Used
 
@@ -104,3 +105,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 Created by [DenisSud](https://github.com/DenisSud)
+{{/REWRITTEN_CODE}}

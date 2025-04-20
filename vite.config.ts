@@ -1,13 +1,21 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-    root: "./",
-    base: "/russian-stress-practice-/", // Note the trailing dash to match the repo name
+    base: "/russian-stress-practice/", // Remove the trailing dash
     build: {
-        outDir: "./dist",
+        outDir: "dist",
+        emptyOutDir: true,
         rollupOptions: {
             input: "./index.html",
-        },
+            output: {
+                entryFileNames: `assets/[name].[hash].js`,
+                chunkFileNames: `assets/[name].[hash].js`,
+                assetFileNames: `assets/[name].[hash].[ext]`
+            }
+        }
     },
     publicDir: "public",
+    server: {
+        open: true
+    }
 });

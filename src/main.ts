@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadWords(): Promise<void> {
         try {
             // Use the base URL from Vite environment
-            const basePath = import.meta.env.BASE_URL || '/';
+            const basePath = (import.meta as any).env.BASE_URL || '/';
             const response: Response = await fetch(`${basePath}phonetics.txt`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
