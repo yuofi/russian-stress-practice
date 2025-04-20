@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <!-- You can change or remove this icon link -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Russian Stress Practice (Vite)</title>
+        <!-- CSS is now typically imported in JS with Vite, but linking here also works -->
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>Russian Word Stress Practice</h1>
+
+            <div id="word-display" class="word-display">
+                <!-- Word will be loaded here by JavaScript -->
+                Loading word...
+            </div>
+
+            <div id="feedback" class="feedback">
+                <!-- Feedback will appear here -->
+            </div>
+
+            <div class="controls">
+                <button id="next-button">Next Word</button>
+            </div>
+
+            <div class="stats">
+                <p>
+                    Score: <span id="score">0</span> /
+                    <span id="attempts">0</span>
+                </p>
+            </div>
+        </div>
+        <script type="module" src="/src/main.ts"></script>
+        <!-- IMPORTANT: type="module" -->
+    </body>
+</html>
