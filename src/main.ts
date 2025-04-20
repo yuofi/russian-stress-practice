@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function loadWords(): Promise<void> {
         try {
-            const response: Response = await fetch("/phonetics.txt");
+            // Update to use relative path that works with the base URL
+            const response: Response = await fetch("./phonetics.txt");
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
