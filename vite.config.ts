@@ -2,12 +2,12 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
     root: "./",
-    base: "/Russian-phonetics/", // Match your repository name exactly (case-sensitive)
+    base: "/russian-stress-practice/",
     build: {
         outDir: "./dist",
         rollupOptions: {
             input: "./index.html",
         },
     },
-    publicDir: "public",
+    publicDir: "public", // Ensure this is set to include static assets
 });
