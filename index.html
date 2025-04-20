@@ -5,7 +5,6 @@
         <link rel="icon" type="image/svg+xml" href="./vite.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Russian Stress Practice (Vite)</title>
-        <link rel="stylesheet" href="./style.css" />
     </head>
     <body>
         <div class="container">
@@ -35,11 +34,14 @@
         <!-- IMPORTANT: type="module" -->
         <script>
             // Debug script to check if main script fails to load
-            window.addEventListener('load', function() {
-                setTimeout(function() {
+            window.addEventListener("load", function () {
+                setTimeout(function () {
                     if (!window.appLoaded) {
-                        console.error('Main application script did not initialize properly');
-                        document.body.innerHTML += '<div style="color:red;padding:20px;background:#ffeeee;margin:20px;border:1px solid red">App failed to load. Check console for errors.</div>';
+                        console.error(
+                            "Main application script did not initialize properly",
+                        );
+                        document.body.innerHTML +=
+                            '<div style="color:red;padding:20px;background:#ffeeee;margin:20px;border:1px solid red">App failed to load. Check console for errors.</div>';
                     }
                 }, 1000);
             });
