@@ -1,10 +1,20 @@
 import "./style.css";
 
+// Add global declaration for the appLoaded flag
+declare global {
+    interface Window {
+        appLoaded: boolean;
+    }
+}
+
 interface WordData {
     word: string;
     stressedIndex: number;
     stressedWord: string;
 }
+
+// Set flag to indicate the script has successfully loaded
+window.appLoaded = true;
 
 document.addEventListener("DOMContentLoaded", () => {
     const wordDisplay = document.getElementById(
@@ -28,8 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function loadWords(): Promise<void> {
         try {
-            // Update to use relative path that works with the base URL
-            const response: Response = await fetch("./phonetics.txt");
+            // Use the base URL from Vite environment
+            const basePath = import.meta.env.BASE_URL || '/';
+            const response: Response = await fetch(`${basePath}phonetics.txt`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -65,14 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (const line of lines) {
             // Split by semicolon to handle multiple forms
-            const wordForms = line.split(";").map(form => form.trim());
+            const wordForms = line.split(";").map((form) => form.trim());
 
             for (const stressedWord of wordForms) {
                 // Skip empty forms
                 if (stressedWord.length === 0) continue;
 
                 // Process comma-separated forms (like "прИбыл, прибылА, прИбыли")
-                const commaSeparatedForms = stressedWord.split(",").map(form => form.trim());
+                const commaSeparatedForms = stressedWord
+                    .split(",")
+                    .map((form) => form.trim());
 
                 for (const form of commaSeparatedForms) {
                     if (form.length === 0) continue;
@@ -91,7 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     if (stressedIndex === -1) {
-                        console.warn(`Could not find stressed vowel in: "${form}"`);
+                        console.warn(
+                            `Could not find stressed vowel in: "${form}"`,
+                        );
                         continue;
                     }
 
