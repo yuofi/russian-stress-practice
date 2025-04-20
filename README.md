@@ -7,7 +7,7 @@ A web application to help learners practice Russian word stress. Correctly placi
 
 ## Live Demo
 
-Visit the application at: [https://denissud.github.io/russian-stress-practice-/](https://denissud.github.io/russian-stress-practice-/)
+Visit the application at: [https://denissud.github.io/russian-stress-practice/](https://denissud.github.io/russian-stress-practice/)
 
 ## Features
 
