@@ -16,7 +16,7 @@ export default function Navigation() {
         <div className="flex space-x-2">
           <Link
             to="/"
-            className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium focus:outline-none ${
               location.pathname === '/'
                 ? 'bg-indigo-100 text-indigo-700 shadow-sm'
                 : 'text-slate-600 hover:bg-slate-100 hover:text-indigo-600'
@@ -31,7 +31,7 @@ export default function Navigation() {
           </Link>
           <Link
             to="/paronyms"
-            className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium focus:outline-none ${
               location.pathname === '/paronyms'
                 ? 'bg-indigo-100 text-indigo-700 shadow-sm'
                 : 'text-slate-600 hover:bg-slate-100 hover:text-indigo-600'

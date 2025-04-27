@@ -210,7 +210,7 @@ export default function StressPracticePage() {
         {/* Toggle button */}
         <button
           onClick={toggleWordDisplay}
-          className="mt-auto px-4 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="mt-auto px-4 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out text-sm w-full focus:outline-none focus:ring-0"
         >
           {showAllWords ? 'Показать изучаемые' : 'Показать все слова'}
         </button>
@@ -253,44 +253,46 @@ export default function StressPracticePage() {
               </div>
 
               {/* Word display */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg mb-4 flex flex-col items-center">
-                <div className="flex justify-center items-center space-x-2 text-5xl mb-8">
-                  {letters.map((letter, idx) => {
-                    const isVowel = vowels.includes(letter.toLowerCase());
-                    const isCorrect = idx === currentWord?.accentIdx;
-                    const isSelected = selected === idx;
-                    const showCorrect = requireRetry === false && feedback && isCorrect;
+                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg mb-4 flex flex-col items-center w-full max-w-full">
+                  {/* Word display with overflow handling */}
+                  <div className="w-full overflow-x-auto mb-8 py-2">
+                    <div className="flex justify-center items-center space-x-2 text-4xl md:text-5xl min-w-min mx-auto">
+                      {letters.map((letter, idx) => {
+                        const isVowel = vowels.includes(letter.toLowerCase());
+                        const isCorrect = idx === currentWord?.accentIdx;
+                        const isSelected = selected === idx;
+                        const showCorrect = requireRetry === false && feedback && isCorrect;
 
-                    return (
-                      <span
-                        key={idx}
-                        onClick={() => handleSelect(idx)}
-                        className={`
-                          relative cursor-pointer px-2 py-1 rounded-lg transition-all duration-200
-                          ${isVowel ? 'hover:bg-slate-100 hover:transform hover:scale-110' : ''}
-                          ${isSelected && isCorrect ? 'bg-emerald-500 text-white transform scale-110' : ''}
-                          ${isSelected && !isCorrect ? 'bg-rose-500 text-white' : ''}
-                          ${showCorrect ? 'bg-emerald-500 text-white transform scale-110' : ''}
-                        `}
-                      >
-                        {letter}
-                        {isVowel && (
-                          <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-slate-300 rounded-full"></span>
-                        )}
-                      </span>
-                    );
-                  })}
-                </div>
-
-                {/* Feedback message */}
-                {feedback && (
-                  <div className={`text-center my-6 text-lg font-medium py-3 px-6 rounded-xl w-full max-w-md mx-auto transform transition-all duration-300 ease-in-out
-                    ${feedback.includes('Правильно')
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-                    {feedback}
+                        return (
+                          <span
+                            key={idx}
+                            onClick={() => handleSelect(idx)}
+                            className={`
+                            relative cursor-pointer px-2 py-1 rounded-lg transition-all duration-200
+                            ${isVowel ? 'hover:bg-slate-100 hover:transform hover:scale-110' : ''}
+                            ${isSelected && isCorrect ? 'bg-emerald-500 text-white transform scale-110' : ''}
+                            ${isSelected && !isCorrect ? 'bg-rose-500 text-white' : ''}
+                            ${showCorrect ? 'bg-emerald-500 text-white transform scale-110' : ''}
+                          `}
+                          >
+                            {letter}
+                            {isVowel && (
+                              <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-slate-300 rounded-full"></span>
+                            )}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
-                )}
+
+                  {/* Feedback message - always reserve space for it */}
+                  <div className={`text-center my-6 text-lg font-medium py-3 px-6 rounded-xl w-full max-w-md mx-auto transform transition-all duration-300 ease-in-out min-h-[60px] flex items-center justify-center
+                  ${!feedback ? 'opacity-0' : ''}
+                  ${feedback && feedback.includes('Правильно')
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : feedback ? 'bg-rose-50 text-rose-700 border border-rose-200' : ''}`}>
+                    {feedback || 'Placeholder for feedback'}
+                  </div>
 
                 {/* Next word button - changes text based on retry state */}
                 <div className="flex justify-center w-full mt-6">
@@ -301,14 +303,14 @@ export default function StressPracticePage() {
                         setFeedback('');
                         setSelected(null);
                       }}
-                      className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-md hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out mx-auto focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transform hover:scale-105"
+                        className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-md hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out mx-auto focus:outline-none focus:ring-0 transform hover:scale-105"
                     >
                       Попробуй ещё раз
                     </button>
                   ) : (
                     <button
                       onClick={loadNextWord}
-                      className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-md hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out mx-auto focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transform hover:scale-105"
+                          className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-md hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 ease-in-out mx-auto focus:outline-none focus:ring-0 transform hover:scale-105"
                       disabled={feedback !== '' && requireRetry}
                     >
                       Следующее слово
