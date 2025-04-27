@@ -1,9 +1,6 @@
-{{REWRITTEN_CODE}}
 # Russian Stress Practice
 
 A web application to help learners practice Russian word stress. Correctly placing stress in Russian words is crucial for proper pronunciation and understanding.
-
-![Russian Stress Practice](https://github.com/DenisSud/russian-stress-practice-/assets/YOUR_ASSET_ID/screenshot.png)
 
 ## Live Demo
 
@@ -12,9 +9,10 @@ Visit the application at: [https://denissud.github.io/russian-stress-practice/](
 ## Features
 
 - Interactive practice of Russian word stress patterns
-- Words sourced from common pronunciation challenges
+- Words with stress patterns built into the application
 - Immediate feedback on correct and incorrect answers
-- Score tracking to monitor your progress
+- Track incorrect words for focused practice
+- Toggle between practicing all words or just mistakes
 - Responsive design works on desktop and mobile devices
 
 ## How to Use
@@ -23,7 +21,7 @@ Visit the application at: [https://denissud.github.io/russian-stress-practice/](
 2. Get immediate feedback on your answer
 3. See the correct stress pattern highlighted
 4. Click "Next Word" to continue practicing
-5. Track your score at the bottom of the screen
+5. Use the sidebar to see your mistakes and switch practice modes
 
 ## Local Development
 
@@ -36,8 +34,8 @@ Visit the application at: [https://denissud.github.io/russian-stress-practice/](
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/DenisSud/russian-stress-practice-.git
-   cd russian-stress-practice-
+   git clone https://github.com/DenisSud/russian-stress-practice.git
+   cd russian-stress-practice
    ```
 
 2. Install dependencies:
@@ -50,7 +48,7 @@ Visit the application at: [https://denissud.github.io/russian-stress-practice/](
    npm run dev
    ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. Open your browser and navigate to `http://localhost:5173/russian-stress-practice/`
 
 ### Building for Production
 
@@ -68,13 +66,13 @@ When you push changes to the `main` branch, the GitHub Actions workflow will:
 1. Build the application
 2. Deploy it to GitHub Pages
 
-The application will be available at: `https://denissud.github.io/russian-stress-practice-/`
+The application will be available at: `https://denissud.github.io/russian-stress-practice/`
 
 ## Technologies Used
 
-- TypeScript
+- React
 - Vite
-- CSS3
+- Tailwind CSS
 - GitHub Actions (for CI/CD)
 - GitHub Pages (for hosting)
 
@@ -82,12 +80,10 @@ The application will be available at: `https://denissud.github.io/russian-stress
 
 To add more Russian words to the practice set:
 
-1. Edit the `public/phonetics.txt` file
-2. Add new words with uppercase letters indicating stress
-   - Example: `вОвремя` (stress on the first 'о')
-3. Words can be separated by semicolons for variants
-   - Example: `прИбыл, прибылА, прИбыли`
-4. Save and deploy
+1. Edit the `src/App.jsx` file
+2. Add new words to the `rawWords` array with uppercase letters indicating stress
+   - Example: `"вОвремя"` (stress on the first 'о')
+3. Save, build, and deploy
 
 ## Contributing
 
@@ -105,4 +101,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 Created by [DenisSud](https://github.com/DenisSud)
-{{/REWRITTEN_CODE}}
