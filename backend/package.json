@@ -10,20 +10,19 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.10.7",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
     "@types/triple-beam": "^1.3.5",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "dotenv-cli": "^8.0.0",
     "eslint-plugin-import": "^2.31.0",
-    "prisma": "^6.4.1",
+    "prisma": "^6.6.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev --watch ./src/emails/dist,./.env --rs --exit-child ./src/index.ts",
-    "build-emails": "rimraf \"./src/emails/dist\" && mkdir \"./src/emails/dist\" && mjml \"./src/emails/[!_]*.mjml\" -o \"./src/emails/dist\"",
-    "copy-emails": "copyfiles ./src/emails/dist/*.html ./dist/backend",
-    "watch-emails": "mjml -w ./src/emails/[!_]*.mjml -o ./src/emails/dist",
+    "dev": "ts-node-dev --rs --exit-child ./src/index.ts",
     "build-ts": "rimraf ./dist && tsc --build ./tsconfig.build.json",
     "build": "pnpm build-emails && pnpm build-ts && pnpm copy-emails",
     "start": "cross-env NODE_ENV=production node ./dist/backend/src/index.js",
@@ -35,16 +34,15 @@
     "test": "jest --runInBand",
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
     "prepare": "pnpm pgc && ts-patch install -s",
-    "sentry-release": "dotenv -- bash -c 'sentry-cli releases new ${SOURCE_VERSION} --finalize --org no-lox --project backend --auth-token ${SENTRY_AUTH_TOKEN}'",
-    "sentry-sourcemaps": "dotenv -- bash -c 'sentry-cli releases files ${SOURCE_VERSION} upload-sourcemaps ./dist --org no-lox --project backend'",
-    "sentry": "pnpm sentry-release && pnpm sentry-sourcemaps"
+    "preset-db": "ts-node src/scripts/presetDB.ts"
   },
   "prisma": {
     "schema": "./src/prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^6.6.0",
     "@russian-stress-practice/frontend": "workspace:*",
+    "@russian-stress-practice/shared": "workspace:*",
     "@trpc/server": "^10.45.2",
     "axios": "^1.8.4",
     "cloudinary": "^2.6.0",
@@ -58,6 +56,8 @@
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "picocolors": "^1.1.1",
     "randomstring": "^1.3.1",
     "serialize-error": "^8.1.0",
@@ -67,6 +67,5 @@
     "winston": "^3.17.0",
     "yaml": "^2.7.1",
     "zod": "^3.24.2"
-  },
-  "Transform": "AWS::Serverless-2016-10-31"
+  }
 }

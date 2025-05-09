@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -35,8 +36,14 @@ model Word {
   word      String
   stress    Int        // Позиция ударения
   practices Practice[]
+  type      PracticeType @default(STRESS)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+}
+
+enum PracticeType {
+  STRESS    // Практика ударений
+  PARONYM   // Практика паронимов
 }
 
 model Practice {

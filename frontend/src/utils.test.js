@@ -1,4 +1,4 @@
-import { addDays, computeNextReview, initializeWords, updateWord, getDueWords } from './utils';
+import { addDays, computeNextReview, initializeWords, updateWord, getDueWords } from './utils/utils';
 
 // Test addDays function
 describe('addDays', () => {
