@@ -13,17 +13,19 @@ model User {
   email         String    @unique
   name          String?
   score         Int       @default(0)
-  // OAuth specific fields
-  provider      Provider  // тип провайдера (Google, Yandex)
-  providerId    String    // ID пользователя у провайдера
-  accessToken   String?   // токен доступа от провайдера
-  refreshToken  String?   // токен обновления от провайдера
-  tokenExpires  DateTime? // время истечения токена
+  provider      Provider  
+  providerId    String    
+  accessToken   String? 
+  refreshToken  String?  
+  tokenExpires  DateTime?
   practices     Practice[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  personalWords PersonalWord[] // Связь с личным словариком слов
+  personalParonyms PersonalParonym[] // Связь с личным словариком паронимов
 
-  @@unique([provider, providerId]) // Уникальный индекс для связки провайдер + providerId
+  @@unique([provider, providerId])
+  ParonymPractice ParonymPractice[]
 }
 
 enum Provider {
@@ -32,18 +34,21 @@ enum Provider {
 }
 
 model Word {
-  id        Int        @id @default(autoincrement())
-  word      String
-  stress    Int        // Позиция ударения
-  practices Practice[]
-  type      PracticeType @default(STRESS)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          Int        @id @default(autoincrement())
+  word        String
+  stress      Int        // Позиция ударения
+  description String?    // Описание слова (для паронимов)
+  practices   Practice[]
+  type        PracticeType @default(STRESS)
+  paronymPairs ParonymPair[] @relation("ParonymWords")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  personalWords PersonalWord[] // Связь с личным словариком
 }
 
 enum PracticeType {
-  STRESS    // Практика ударений
-  PARONYM   // Практика паронимов
+  STRESS   
+  PARONYM  
 }
 
 model Practice {
@@ -57,4 +62,57 @@ model Practice {
 
   @@index([userId])
   @@index([wordId])
+}
+
+model ParonymPair {
+  id          Int      @id @default(autoincrement())
+  words       Word[]   @relation("ParonymWords")
+  description String?  // Описание различия между паронимами
+  practices   ParonymPractice[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  personalParonyms PersonalParonym[] // Связь с личным словариком
+}
+
+model ParonymPractice {
+  id           Int         @id @default(autoincrement())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       Int
+  paronymPair  ParonymPair @relation(fields: [paronymPairId], references: [id])
+  paronymPairId Int
+  selectedWordId Int       // ID выбранного слова
+  correctWordId Int        // ID правильного слова
+  correct      Boolean     // Правильно ли выбрано слово
+  createdAt    DateTime    @default(now())
+
+  @@index([userId])
+  @@index([paronymPairId])
+}
+
+// Модель для личного словарика слов
+model PersonalWord {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  word      Word     @relation(fields: [wordId], references: [id])
+  wordId    Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, wordId]) // Уникальный индекс для пары пользователь-слово
+  @@index([userId])
+  @@index([wordId])
+}
+
+// Модель для личного словарика паронимов
+model PersonalParonym {
+  id            Int         @id @default(autoincrement())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  paronymPair   ParonymPair @relation(fields: [paronymPairId], references: [id])
+  paronymPairId Int
+  createdAt     DateTime    @default(now())
+
+  @@unique([userId, paronymPairId]) // Уникальный индекс для пары пользователь-пароним
+  @@index([userId])
+  @@index([paronymPairId])
 }

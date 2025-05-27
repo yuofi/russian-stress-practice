@@ -34,7 +34,8 @@
     "test": "jest --runInBand",
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
     "prepare": "pnpm pgc && ts-patch install -s",
-    "preset-db": "ts-node src/scripts/presetDB.ts"
+    "preset-db": "ts-node src/scripts/presetDB.ts",
+    "preset-paronyms": "ts-node src/scripts/importParonyms.ts"
   },
   "prisma": {
     "schema": "./src/prisma/schema.prisma"
