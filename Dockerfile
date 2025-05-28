@@ -42,9 +42,7 @@ COPY --chown=appuser:appuser backend/package.json ./backend/package.json
 COPY --chown=appuser:appuser frontend/package.json ./frontend/package.json
 COPY --chown=appuser:appuser shared/package.json ./shared/package.json
 
-# Mount secret .env files (Render mounts /etc/secrets/ automatically)
-COPY /etc/secrets/.backend.env ./backend/.env
-COPY /etc/secrets/.frontend.env ./frontend/.env.production
+
 
 # Set permissions
 RUN chown -R appuser:appuser /app
