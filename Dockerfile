@@ -11,6 +11,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+# Install dependencies
 FROM base AS deps
 WORKDIR /app
 COPY --chown=appuser:appuser pnpm-workspace.yaml ./
@@ -21,14 +22,16 @@ COPY --chown=appuser:appuser shared/package.json ./shared/
 COPY --chown=appuser:appuser pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --prod
 
+# Build the app
 FROM deps AS build
 COPY --chown=appuser:appuser . .
 RUN pnpm run -r build
 
+# Production image
 FROM base AS prod
 WORKDIR /app
 
-# Copy build artifacts and dependencies
+# Copy build output and installed node_modules
 COPY --chown=appuser:appuser --from=build /app/backend/dist ./backend/dist
 COPY --chown=appuser:appuser --from=build /app/frontend/dist ./frontend/dist
 COPY --chown=appuser:appuser --from=deps /app/node_modules ./node_modules
@@ -38,18 +41,20 @@ COPY --chown=appuser:appuser --from=deps /app/shared/node_modules ./shared/node_
 COPY --chown=appuser:appuser backend/package.json ./backend/package.json
 COPY --chown=appuser:appuser frontend/package.json ./frontend/package.json
 COPY --chown=appuser:appuser shared/package.json ./shared/package.json
-COPY --chown=appuser:appuser backend/.env.production ./backend/.env.production
-COPY --chown=appuser:appuser frontend/.env.production ./frontend/.env.production
 
-# Set proper permissions
+# Mount secret .env files (Render mounts /etc/secrets/ automatically)
+COPY /etc/secrets/.backend.env ./backend/.env
+COPY /etc/secrets/.frontend.env ./frontend/.env.production
+
+# Set permissions
 RUN chown -R appuser:appuser /app
 
 ENV NODE_ENV=production
 
-# Switch to non-root user
+# Use non-root user
 USER appuser
 
-# Add healthcheck
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:3000/health || exit 1
 
