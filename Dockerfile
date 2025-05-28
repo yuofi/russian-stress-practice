@@ -38,8 +38,6 @@ COPY --chown=appuser:appuser --from=deps /app/shared/node_modules ./shared/node_
 COPY --chown=appuser:appuser backend/package.json ./backend/package.json
 COPY --chown=appuser:appuser frontend/package.json ./frontend/package.json
 COPY --chown=appuser:appuser shared/package.json ./shared/package.json
-COPY --chown=appuser:appuser backend/.env.production ./backend/.env.production
-COPY --chown=appuser:appuser frontend/.env.production ./frontend/.env.production
 
 # Set proper permissions
 RUN chown -R appuser:appuser /app

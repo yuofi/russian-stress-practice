@@ -15,10 +15,14 @@ const findEnvFilePath = (dir: string): string | null => {
   return findEnvFilePath(path.dirname(dir))
 }
 
-const envFilePath = findEnvFilePath(__dirname)
-if (envFilePath) {
-  dotenv.config({ path: envFilePath })
-  dotenv.config({ path: `${envFilePath}.${process.env.NODE_ENV}` })
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '/etc/secrets/.backend.env' });
+} else {
+  const envFilePath = findEnvFilePath(__dirname);
+  if (envFilePath) {
+    dotenv.config({ path: envFilePath });
+    dotenv.config({ path: `${envFilePath}.${process.env.NODE_ENV}` });
+  }
 }
 
 const zEnv = z.object({
