@@ -42,10 +42,37 @@ export default function ParonymsPage() {
   // Обработчик ответа пользователя
   const handleRecordPractice = async (paronymId: number, selectedWord: string, isCorrect: boolean) => {
     try {
+      // Получаем данные о паронимах
+      const paronymPair = paronymsData?.paronyms.find(p => p.id === paronymId);
+      if (!paronymPair) {
+        console.error("Не удалось найти пару паронимов с ID:", paronymId);
+        return;
+      }
+      
+      // Находим ID выбранного слова
+      const selectedParonym = paronymPair.paronyms.find(p => p.word === selectedWord);
+      if (!selectedParonym) {
+        console.error("Не удалось найти выбранное слово:", selectedWord);
+        return;
+      }
+      
+      // Находим ID правильного слова (то, которое соответствует заданию)
+      // Предполагаем, что ParonymsInterface передает нам правильное значение isCorrect
+      const correctParonym = paronymPair.paronyms.find(p => 
+        isCorrect ? p.word === selectedWord : p.word !== selectedWord
+      );
+      
+      if (!correctParonym) {
+        console.error("Не удалось определить правильное слово");
+        return;
+      }
+      
       await recordPracticeMutation.mutateAsync({
         type: "PARONYM",
-        wordId: paronymId,
-        correct: isCorrect,
+        paronymPairId: paronymId,
+        selectedWordId: selectedParonym.id,
+        correctWordId: correctParonym.id,
+        correct: isCorrect
       });
     } catch (error) {
       console.error("Failed to record practice:", error);
@@ -57,24 +84,6 @@ export default function ParonymsPage() {
     setStatsPeriod(period);
   };
 
-  // Обработчик переключения между личным словарем и общим списком
-  const togglePersonalDictionary = () => {
-    setSearchParams({ personal: (!isPersonalDictionary).toString() });
-  };
-
-  // Подключаем обработчик клика по кнопке статистики
-  useEffect(() => {
-    const statsButton = document.getElementById('stats-toggle-button');
-    if (statsButton) {
-      statsButton.addEventListener('click', toggleStats);
-    }
-    
-    return () => {
-      if (statsButton) {
-        statsButton.removeEventListener('click', toggleStats);
-      }
-    };
-  }, [toggleStats]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -104,7 +113,7 @@ export default function ParonymsPage() {
       {/* Main content - показывается всегда на десктопе и когда статистика скрыта на мобильных */}
       <div className={isStatsVisible ? 'hidden md:block' : ''}>
         <ParonymsInterface
-          paronymGroups={paronymsData?.paronyms || []}
+          paronymGroups={(paronymsData?.paronyms || []).map(pg => ({ ...pg, context: "" }))}
           isLoading={isParonymsLoading}
           statsPeriod={statsPeriod}
           setStatsPeriod={handlePeriodChange}

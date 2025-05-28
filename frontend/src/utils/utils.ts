@@ -58,7 +58,7 @@ export function initializeWords(rawWords: string[]): Word[] {
 
 // Helper to update a specific word in the words array
 export function updateWord(words: Word[], targetWord: Word, updateFn: (word: Word) => void): Word[] {
-  console.log("Updating word:", targetWord.word);
+  //console.log("Updating word:", targetWord.word);
   
   return words.map(word => {
     if (word.id === targetWord.id) {
@@ -66,7 +66,7 @@ export function updateWord(words: Word[], targetWord: Word, updateFn: (word: Wor
       const updatedWord = { ...word };
       // Apply the update function
       updateFn(updatedWord);
-      console.log("Word updated:", updatedWord);
+      //console.log("Word updated:", updatedWord);
       return updatedWord;
     }
     return word;
@@ -75,12 +75,12 @@ export function updateWord(words: Word[], targetWord: Word, updateFn: (word: Wor
 
 // Get words that are due for review today
 export function getDueWords(words: Word[], today: Date): Word[] {
-  console.log("Getting due words from", words.length, "total words");
-  console.log("Today's date:", today);
+  //console.log("Getting due words from", words.length, "total words");
+  //console.log("Today's date:", today);
   
   // Если список слов пуст, возвращаем пустой массив
   if (!words || words.length === 0) {
-    console.log("Words list is empty");
+    //console.log("Words list is empty");
     return [];
   }
   
@@ -88,19 +88,19 @@ export function getDueWords(words: Word[], today: Date): Word[] {
   const dueWords = words.filter(word => {
     // Проверяем, что nextReview - это действительно дата
     if (!(word.nextReview instanceof Date)) {
-      console.log("Invalid nextReview date for word:", word);
+      //console.log("Invalid nextReview date for word:", word);
       return true; // Если дата некорректна, считаем слово доступным для практики
     }
     
     const isDue = !word.retired && word.nextReview <= today;
     if (!isDue) {
-      console.log("Word not due:", word.word, "nextReview:", word.nextReview, "today:", today);
+      //console.log("Word not due:", word.word, "nextReview:", word.nextReview, "today:", today);
     }
     
     return isDue;
   });
   
-  console.log("Found", dueWords.length, "due words");
+  //console.log("Found", dueWords.length, "due words");
   return dueWords;
 }
 

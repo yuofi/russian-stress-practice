@@ -39,6 +39,9 @@ export default function ParonymsInterface({
   // State to track if all paronyms are completed
   const [allCompleted, setAllCompleted] = useState(false);
 
+  // Add state to track the correct word for the current task
+  const [correctWord, setCorrectWord] = useState<string | null>(null);
+
   // Load a random paronym group
   const loadRandomParonymGroup = () => {
     if (paronymGroups.length === 0) {
@@ -54,8 +57,19 @@ export default function ParonymsInterface({
     // Shuffle the paronyms in the group
     const shuffledParonyms = shuffleArray([...randomGroup.paronyms]);
     
+    // Randomly select one paronym as the correct one for this task
+    const correctIndex = Math.floor(Math.random() * shuffledParonyms.length);
+    const correctParonym = shuffledParonyms[correctIndex];
+    
+    // Create a task from the selected paronym's explanation
+    const task = `Выберите слово, соответствующее описанию: ${correctParonym.explanation}`;
+    
+    // Store the correct word for this task
+    setCorrectWord(correctParonym.word);
+    
     setCurrentParonymGroup({
       ...randomGroup,
+      context: task,
       paronyms: shuffledParonyms,
     });
     
@@ -68,24 +82,36 @@ export default function ParonymsInterface({
     // Only allow selection if no feedback is currently shown
     if (feedback) return;
 
-    // Guard against no current paronym group
-    if (!currentParonymGroup) return;
+    // Guard against no current paronym group or no correct word
+    if (!currentParonymGroup || !correctWord) return;
 
     setSelectedParonym(paronym.word);
 
     // Check if the selected paronym is correct
-    const isCorrect = paronym.isCorrect;
+    const isCorrect = paronym.word === correctWord;
+    
+    // Find the correct paronym object
+    const correctParonymObj = currentParonymGroup.paronyms.find(p => p.word === correctWord);
+    
+    if (!correctParonymObj) {
+      console.error("Не удалось найти правильный пароним");
+      return;
+    }
 
-    // Record practice attempt to backend
+    // Record practice attempt to backend with both selected word and correct word
     if (currentParonymGroup.id) {
-      recordPractice(currentParonymGroup.id, paronym.word, isCorrect);
+      recordPractice(
+        currentParonymGroup.id, 
+        correctParonymObj.word, // Передаем слово правильного паронима
+        isCorrect
+      );
     }
 
     if (isCorrect) {
       setFeedback("✅ Правильно! " + paronym.explanation);
     } else {
       // Find the correct paronym for the explanation
-      const correctParonym = currentParonymGroup.paronyms.find(p => p.isCorrect);
+      const correctParonym = currentParonymGroup.paronyms.find(p => p.word === correctWord);
       setFeedback(`❌ Неправильно. Правильный ответ: ${correctParonym?.word}. ${correctParonym?.explanation}`);
     }
   };
@@ -164,7 +190,7 @@ export default function ParonymsInterface({
             </div>
           ) : currentParonymGroup ? (
             <>
-              <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg mb-4 sm:mb-6 relative">
+               <div className="bg-white p-4 sm:p-6 md:p-8 pt-14 rounded-2xl shadow-lg mb-4 sm:mb-6 relative">
                 {/* Кнопка для личного словаря (только в обычном режиме) */}
                 {!isPersonalDictionary && (
                   <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
@@ -189,10 +215,10 @@ export default function ParonymsInterface({
                       className={`
                         p-4 rounded-xl text-lg font-medium transition-all duration-200
                         ${!feedback ? 'hover:bg-indigo-50 hover:border-indigo-200 active:bg-indigo-100' : ''}
-                        ${selectedParonym === paronym.word && paronym.isCorrect ? 'bg-emerald-100 border-emerald-300 text-emerald-800' : ''}
-                        ${selectedParonym === paronym.word && !paronym.isCorrect ? 'bg-rose-100 border-rose-300 text-rose-800' : ''}
+                        ${selectedParonym === paronym.word && paronym.word === correctWord ? 'bg-emerald-100 border-emerald-300 text-emerald-800' : ''}
+                        ${selectedParonym === paronym.word && paronym.word !== correctWord ? 'bg-rose-100 border-rose-300 text-rose-800' : ''}
                         ${!selectedParonym ? 'bg-white border-slate-200 text-slate-700' : ''}
-                        ${feedback && paronym.isCorrect && selectedParonym !== paronym.word ? 'bg-emerald-100 border-emerald-300 text-emerald-800' : ''}
+                        ${feedback && paronym.word === correctWord && selectedParonym !== paronym.word ? 'bg-emerald-100 border-emerald-300 text-emerald-800' : ''}
                         border-2
                       `}
                     >
@@ -208,12 +234,23 @@ export default function ParonymsInterface({
                       ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
                       : 'bg-rose-50 text-rose-700 border border-rose-200'}`}
                   >
-                    <p className="text-base sm:text-lg mb-2">
-                      {feedback.split('.')[0]}
+                    <p className="text-base sm:text-lg mb-2 font-medium">
+                      {feedback.includes('Правильно') ? '✅ Правильно!' : '❌ Неправильно!'}
                     </p>
-                    <p className="text-sm sm:text-base">
-                      {feedback.split('.').slice(1).join('.')}
-                    </p>
+                    
+                    {/* Объяснения всех слов в группе */}
+                    <div className="mt-3 space-y-2">
+                      {currentParonymGroup?.paronyms.map((paronym) => (
+                        <div key={paronym.id} className={`p-2 rounded ${
+                          paronym.word === correctWord 
+                            ? 'bg-white border border-emerald-100' 
+                            : 'bg-white border border-slate-100'
+                        }`}>
+                          <p className="font-medium">{paronym.word}</p>
+                          <p className="text-sm">{paronym.explanation}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
                 
@@ -236,6 +273,15 @@ export default function ParonymsInterface({
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 
 
 

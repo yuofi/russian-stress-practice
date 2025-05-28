@@ -81,12 +81,12 @@ export default function StressPracticeInterface({
   // Load the next word to practice
   const loadNextWord = (): void => {
     const due = getDueWords(words, today);
-    console.log(
-      "Loading next word. Due words:",
-      due.length,
-      "Total words:",
-      words.length
-    );
+    // console.log(
+    //   "Loading next word. Due words:",
+    //   due.length,
+    //   "Total words:",
+    //   words.length
+    // );
 
     if (due.length > 0) {
       setCurrentWord(due[0]);
@@ -314,15 +314,6 @@ export default function StressPracticeInterface({
                       : 'bg-rose-50 text-rose-700 border border-rose-200'}`}
                   >
                     <p className="text-base sm:text-lg flex items-center justify-center">
-                      {feedback.includes('Правильно') ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      )}
                       {feedback}
                     </p>
                   </div>

@@ -17,12 +17,11 @@ const queryClient = new QueryClient({
     },
   },
 });
-
 const trpcClient = trpc.createClient({
   transformer: SuperJSON,
   links: [
     loggerLink({
-      enabled: () => env.NODE_ENV === 'development'
+      enabled: () => env.NODE_ENV === 'development',
     }),
     httpBatchLink({
       url: env.VITE_BACKEND_TRPC_URL,

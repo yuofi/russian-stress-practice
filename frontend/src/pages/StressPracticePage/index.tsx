@@ -124,19 +124,6 @@ export default function StressPracticePage() {
     });
   };
 
-  // Подключаем обработчик клика по кнопке статистики
-  useEffect(() => {
-    const statsButton = document.getElementById('stats-toggle-button');
-    if (statsButton) {
-      statsButton.addEventListener('click', toggleStats);
-    }
-    
-    return () => {
-      if (statsButton) {
-        statsButton.removeEventListener('click', toggleStats);
-      }
-    };
-  }, [toggleStats]);
 
   // Initialize words with learning metadata when fetched
   useEffect(() => {

@@ -8,6 +8,7 @@ export const zEnv = z.object({
   VITE_GOOGLE_CLIENT_ID: zEnvNonemptyTrimmed,
   VITE_GOOGLE_REDIRECT_URI: zEnvNonemptyTrimmed,
   NODE_ENV: z.enum(["development", "production"]),
+  VITE_PORT: zEnvNonemptyTrimmed
 });
 
 // eslint-disable-next-line no-restricted-syntax

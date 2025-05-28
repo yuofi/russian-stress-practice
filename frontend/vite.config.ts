@@ -31,10 +31,10 @@ export default defineConfig(({ mode }) => {
     publicDir: "public",
     server: {
       open: true,
-      port: +env.PORT,
+      port: +env.VITE_PORT,
     },
     preview: {
-      port: +env.PORT,
+      port: +env.VITE_PORT,
     },
     define: {
       'process.env': publicEnv,

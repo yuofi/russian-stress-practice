@@ -58,4 +58,5 @@ export interface ParonymGroup {
   id: number;
   group: string[];
   paronyms: Paronym[];
+  context: string;
 }
