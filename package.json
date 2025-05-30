@@ -28,7 +28,8 @@
       "dev": "pnpm -r --parallel dev",
       "types": "pnpm -r --parallel types",
       "test": "pnpm -r test",
-      "prepare": "husky && husky install"
+      "build": "pnpm w build && pnpm b build"
+
     },
     "devDependencies": {
       "@eslint/eslintrc": "^3.3.1",
@@ -52,6 +53,7 @@
       "typescript": "^5.7.3",
       "typescript-transform-paths": "^3.5.5"
     },
-    "type": "module"
+    "type": "module",
+    "packageManager": "pnpm@10.11.0" 
   }
   

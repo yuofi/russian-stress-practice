@@ -1,61 +1,72 @@
-# Use debian slim as base for better security
+# ---------------------- BASE IMAGE ----------------------
 FROM node:22-slim AS base
 
-# Update apt-get and upgrade packages
-RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Add non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Install dependencies
-FROM base AS deps
-WORKDIR /app
-COPY --chown=appuser:appuser pnpm-workspace.yaml ./
-COPY --chown=appuser:appuser package.json ./
-COPY --chown=appuser:appuser backend/package.json ./backend/
-COPY --chown=appuser:appuser frontend/package.json ./frontend/
-COPY --chown=appuser:appuser shared/package.json ./shared/
-COPY --chown=appuser:appuser pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
-
-# Build the app
-FROM deps AS build
-COPY --chown=appuser:appuser . .
-RUN pnpm run -r build
-
-# Production image
-FROM base AS prod
+# ---------------------- PREPARE WORKSPACE (DEPS + SOURCE) ----------------------
+FROM base AS prepare_workspace
 WORKDIR /app
 
-# Copy build output and installed node_modules
-COPY --chown=appuser:appuser --from=build /app/backend/dist ./backend/dist
-COPY --chown=appuser:appuser --from=build /app/frontend/dist ./frontend/dist
-COPY --chown=appuser:appuser --from=deps /app/node_modules ./node_modules
-COPY --chown=appuser:appuser --from=deps /app/backend/node_modules ./backend/node_modules
-COPY --chown=appuser:appuser --from=deps /app/frontend/node_modules ./frontend/node_modules
-COPY --chown=appuser:appuser --from=deps /app/shared/node_modules ./shared/node_modules
-COPY --chown=appuser:appuser backend/package.json ./backend/package.json
-COPY --chown=appuser:appuser frontend/package.json ./frontend/package.json
-COPY --chown=appuser:appuser shared/package.json ./shared/package.json
+# Копируем манифесты воркспейса
+COPY pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+COPY shared/package.json ./shared/
 
+# Копируем ВЕСЬ остальной исходный код проекта
+# Убедитесь, что .dockerignore настроен правильно, чтобы не копировать лишнее (например, локальные node_modules)
+COPY . .
 
+# Устанавливаем зависимости, включая devDependencies, так как они нужны для сборки
+RUN pnpm install --frozen-lockfile
 
-# Set permissions
-RUN chown -R appuser:appuser /app
+# ---------------------- BUILD ----------------------
+FROM prepare_workspace AS build
+# WORKDIR /app уже установлен из prepare_workspace
 
+# Копируем .env файлы, если они нужны на этапе сборки (например, VITE_* в фронте)
+# Эти пути должны быть относительно контекста сборки Docker (где лежит Dockerfile)
+COPY etc/secrets/.frontend.env ./frontend/.env
+COPY etc/secrets/.backend.env ./backend/.env
+
+RUN pnpm b pgc
+RUN pnpm build
+
+# ---------------------- FINAL (PRODUCTION) ----------------------
+FROM node:22-slim AS prod
+WORKDIR /app
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 ENV NODE_ENV=production
 
-# Use non-root user
-USER appuser
+# Копируем package.json и pnpm-workspace.yaml для запуска через pnpm
+COPY package.json pnpm-workspace.yaml ./
+COPY backend/package.json ./backend/
+# Если backend имеет прямые workspace-зависимости от shared, которые не встроены в bundle:
+# COPY shared/package.json ./shared/
 
-# Healthcheck
+# Копируем только production node_modules (или все, если pnpm их отфильтрует при запуске)
+# и артефакты сборки
+COPY --from=prepare_workspace /app/node_modules ./node_modules
+COPY --from=build /app/backend/dist ./backend/dist
+COPY --from=build /app/frontend/dist ./frontend/dist 
+# Если фронтенд нужно раздавать с этого же сервера
+
+# Копируем .env для runtime бэкенда
+COPY etc/secrets/.backend.env ./backend/.env
+
+
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -f http://localhost:3000/health || exit 1
+  CMD curl -f http://localhost:3000/ping || exit 1
 
 EXPOSE 3000
 
-CMD ["pnpm", "--filter", "backend", "start"]
+CMD ["pnpm", "--filter", "@russian-stress-practice/backend", "start"]

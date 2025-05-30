@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: rupractice
+      POSTGRES_PASSWORD: rupractice
+      POSTGRES_DB: russian
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stress-practice-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # backend
+      - "5173:5173" # optional: frontend preview
+    depends_on:
+      - db
+    volumes:
+      - ./etc/secrets:/etc/secrets:ro
+    environment:
+      DATABASE_URL: postgres://rupractice:rupractice@db:5432/russian
+      NODE_ENV: production
+    command: ["pnpm", "--filter", "@russian-stress-practice/backend", "start"]
+
+volumes:
+  pgdata:

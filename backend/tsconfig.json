@@ -22,6 +22,10 @@
     "module": "commonjs",
     "moduleResolution": "Node",
     "target": "ES2021",
+    "paths": {
+      "@russian-stress-practice/shared/*": ["../shared/*"],
+      "@russian-stress-practice/frontend/*": ["../frontend/*"]
+    }
   },
   "include": ["src"]
 }

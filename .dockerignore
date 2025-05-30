@@ -1,0 +1,10 @@
+node_modules
+dist
+.env*
+*.env
+frontend/.env*
+backend/.env*
+**/.turbo
+**/.next
+**/.cache
+**/pnpm-debug.log
