@@ -1,6 +1,14 @@
 #!/bin/sh
 # Выходить немедленно, если команда завершается с ненулевым статусом
 set -e
+if [ -f /etc/secrets/.backend.env ]; then
+  cp /etc/secrets/.backend.env /app/backend/.env
+fi
+
+if [ -f /etc/secrets/.frontend.env ]; then
+  cp /etc/secrets/.frontend.env /app/frontend/.env
+fi
+
 
 echo "Running database preprocessing scripts (if needed)..."
 
