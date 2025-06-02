@@ -28,9 +28,6 @@ RUN pnpm install --frozen-lockfile
 
 # ---------------------- BUILD ----------------------
 FROM prepare_workspace AS build
-# Копируем .env файлы, если они нужны на этапе сборки
-COPY etc/secrets/.frontend.env ./frontend/.env
-COPY etc/secrets/.backend.env ./backend/.env
 
 RUN pnpm b pgc
 RUN pnpm build
@@ -57,8 +54,6 @@ COPY --from=build /app/backend/node_modules ./backend/node_modules
 COPY --from=build /app/backend/dist ./backend/dist
 COPY --from=build /app/frontend/dist ./frontend/dist 
 
-# Копируем .env для runtime бэкенда
-COPY etc/secrets/.backend.env ./backend/.env
 
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
