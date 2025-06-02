@@ -21,38 +21,16 @@ const findFileDeep = (startDir: string, targetFilename: string): string | null =
   return null;
 };
 
-// const prodSecretPath = "/etc/secrets/.backend.env";
 
-// if (localSecretPath) {
-//   // eslint-disable-next-line no-console
-//   console.log('✅ Loading env from:', localSecretPath);
-//   const result = dotenv.config({ path: localSecretPath });
-//   // eslint-disable-next-line no-console
-//   console.log('✅ dotenv result:', result);
-//   console.log('✅ process.env.PORT:', process.env.PORT);
-// } else {
-//   console.warn('⚠️  No .backend.env file found!');
-// }
+const splitted = process.cwd().split('\\')
+// console.log(splitted[splitted.length - 3])
 
-// if (process.env.NODE_ENV === "production") {
-//   const projectRoot = path.resolve(__dirname, "../../../../../");
-// const localSecretPath = findFileDeep(projectRoot, ".backend.env");
-//   if (localSecretPath) {
-//    console.log('loaded prod local');
-//   dotenv.config({ path: localSecretPath });
-//   } else {
-//     console.log('loaded local');
-//     dotenv.config();
-//   }
-// } else {
-//   dotenv.config();
-// }
-const envPath = findFileDeep(path.resolve(__dirname, "../../../"), ".env")
-if (envPath) {
-  dotenv.config({path: envPath})
-} else {
+if (splitted[splitted.length - 3] == 'web') {
   dotenv.config()
+} else {  
+  dotenv.config({ path: path.resolve(process.cwd(), 'backend', '.env') })
 }
+
 const zEnv = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']),
   PORT: z.string().transform(Number),
