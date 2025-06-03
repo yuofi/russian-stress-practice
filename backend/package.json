@@ -31,6 +31,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/.eslintcache .",
     "pmd": "prisma migrate dev",
     "pmt": "dotenv -e ./.env.test prisma migrate deploy",
+    "pmdep": "prisma migrate deploy",
     "pgc": "prisma generate",
     "test": "jest --runInBand",
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",

@@ -24,9 +24,9 @@ fi
 echo "Listing /etc/secrets/ directory:"
 ls -la /etc/secrets/ # Посмотрим, что там есть во время выполнения
 
-echo "Running database preprocessing scripts (if needed)..."
-node ./backend/dist/backend/src/scripts/presetDB.js
-node ./backend/dist/backend/src/scripts/importParonyms.js
+# echo "Running database preprocessing scripts (if needed)..."
+# node ./backend/dist/backend/src/scripts/presetDB.js
+# node ./backend/dist/backend/src/scripts/importParonyms.js
 
 echo "Database preprocessing finished."
 echo "Starting application..."
