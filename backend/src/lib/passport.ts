@@ -17,21 +17,21 @@ export const applyPassportToExpressApp = (expressApp: Express, ctx: AppContext):
       },
       async (jwtPayload: any, done) => {
         try {
-          logger.info("passport:jwt", "JWT payload received", { payload: jwtPayload });
+          // logger.info("passport:jwt", "JWT payload received", { payload: jwtPayload });
           const userId = parseInt(jwtPayload.sub, 10);
-          logger.info("passport:jwt", "Looking for user with ID", { userId });
+          // logger.info("passport:jwt", "Looking for user with ID", { userId });
           
           const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
           
           if (!user) {
-            logger.info("passport:jwt", "User not found", { userId });
+            // logger.info("passport:jwt", "User not found", { userId });
             return done(null, false);
           }
           
-          logger.info("passport:jwt", "User authenticated successfully", { userId });
+          // logger.info("passport:jwt", "User authenticated successfully", { userId });
           return done(null, user);
         } catch (error) {
-          logger.error("passport:jwt", error);
+          // logger.error("passport:jwt", error);
           return done(error, false);
         }
       }

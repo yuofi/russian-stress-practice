@@ -1,4 +1,5 @@
 import { env } from "./utils/env";
+import path from "path";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
@@ -7,6 +8,8 @@ import { applyPassportToExpressApp } from "./lib/passport";
 import { ApplyTrpcToExpressApp, getCreateTrpcContext } from "./lib/trpc";
 import { trpcRouter } from "./router";
 import { logger } from "./utils/logger";
+import { applyServeWebApp } from "./utils/serveWebApp";
+
 
 void (async () => {
   let ctx: AppContext | null = null;
@@ -16,7 +19,7 @@ void (async () => {
     
     app.use(
       cors({
-        origin: ["http://localhost:5173"], // Explicitly allow your frontend origin
+        origin: ["http://localhost:5173"],
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: [
@@ -29,11 +32,11 @@ void (async () => {
       })
     );
     
-    // Важно: применяем Passport до TRPC middleware
+   
     applyPassportToExpressApp(app, ctx);
     
     await ApplyTrpcToExpressApp(app, ctx, trpcRouter);
-    
+    await applyServeWebApp(app)
     app.options("*", cors());
     app.get("/ping", (req, res) => {
       res.send("pong");

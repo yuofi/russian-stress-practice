@@ -15,7 +15,7 @@ export default function App() {
     <TrpcProvider>
       <AppContextProvider>
         <StatsProvider>
-          <Router basename="/russian-stress-practice">
+          <Router>
             <div className="flex flex-col min-h-screen">
               <Navigation />
               <div className="flex-grow pb-16 md:pb-0"> {/* Добавляем отступ снизу для мобильной навигации */}

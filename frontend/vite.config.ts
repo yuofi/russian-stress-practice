@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
   }, {})
 
   return {
-    base: "/russian-stress-practice/",
+    base: "/",
     plugins: [react()],
     build: {
       outDir: "dist",
