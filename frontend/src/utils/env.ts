@@ -11,5 +11,6 @@ export const zEnv = z.object({
   VITE_PORT: zEnvNonemptyTrimmed
 });
 
-// eslint-disable-next-line no-restricted-syntax
-export const env = zEnv.parse(process.env);
+const envFromBackend = (window as any).webappEnvFromBackend
+export const env = zEnv.parse(envFromBackend?.replaceMeWithPublicEnv ? process.env : envFromBackend)
+

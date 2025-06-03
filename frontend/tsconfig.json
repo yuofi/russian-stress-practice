@@ -22,5 +22,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "../shared/src/zod.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "../shared/src/zod.ts", "src/lib/parsePublicEnv.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
